@@ -23,8 +23,10 @@ import org.apache.bcel.classfile.ConstantPool;
 import org.apache.bcel.classfile.EmptyVisitor;
 import org.apache.bcel.classfile.Field;
 import org.apache.bcel.classfile.JavaClass;
+import org.apache.bcel.classfile.LineNumber;
 import org.apache.bcel.classfile.LocalVariable;
 import org.apache.bcel.classfile.Method;
+import org.apache.bcel.generic.ASTORE;
 import org.apache.bcel.generic.ConstantPoolGen;
 import org.apache.bcel.generic.ConstantPushInstruction;
 import org.apache.bcel.generic.INVOKEINTERFACE;
@@ -36,6 +38,7 @@ import org.apache.bcel.generic.InstructionConstants;
 import org.apache.bcel.generic.InstructionHandle;
 import org.apache.bcel.generic.MethodGen;
 import org.apache.bcel.generic.ObjectType;
+import org.apache.bcel.generic.PushInstruction;
 import org.apache.bcel.generic.ReturnInstruction;
 import org.apache.bcel.generic.Type;
 import org.apache.commons.collections.IteratorUtils;
@@ -54,6 +57,7 @@ import com.google.common.collect.Multimap;
  * 
  * @author ssarnobat@google.com (Sridhar Sarnobat)
  */
+@Deprecated
 public class JavaVariableFlow {
 
 	public static void main(String[] args) {
@@ -333,7 +337,7 @@ public class JavaVariableFlow {
 				          for (int i = 0; i < size; i++) {
 				              LocalVariable variable = m.getLocalVariableTable().getLocalVariable(i);
 				              // This will only print the variable name if the class was compiled with java -g flag (or -Dcompiler.debug=true)
-				              System.err.println("MyMethodVisitor() - " + m.getName() + "::" + variable.getName());
+				              System.err.println("MyMethodVisitor.MyMethodVisitor() - " + m.getName() + "::" + variable.getName());
 				          }
 				      }
 					this.constantsPool = methodGen.getConstantPool();
@@ -369,7 +373,19 @@ public class JavaVariableFlow {
 					return ((InstructionConstants.INSTRUCTIONS[iInstruction.getOpcode()] != null)
 							&& !(iInstruction instanceof ConstantPushInstruction) && !(iInstruction instanceof ReturnInstruction));
 				}
+				
 
+			    @Override
+			    public void visitASTORE( final ASTORE obj ) {
+			    }
+
+
+			    @Override
+			    public void visitPushInstruction( final PushInstruction obj ) {
+			    	System.out
+							.println("MyMethodVisitor.visitPushInstruction()" + obj.toString());
+			    }
+			    
 				/** instance method */
 				@Override
 				public void visitINVOKEVIRTUAL(INVOKEVIRTUAL iInstruction) {
@@ -801,6 +817,14 @@ public class JavaVariableFlow {
 							&& !(iInstruction instanceof ConstantPushInstruction) && !(iInstruction instanceof ReturnInstruction));
 				}
 
+
+				/** variable assignment */
+			    @Override
+			    public void visitASTORE( final ASTORE obj ) {
+			    	System.out
+							.println("MyMethodVisitor.visitASTORE() " + obj.getIndex());
+			    }
+			    
 				/** instance method */
 				@Override
 				public void visitINVOKEVIRTUAL(INVOKEVIRTUAL iInstruction) {
