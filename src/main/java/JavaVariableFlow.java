@@ -1234,7 +1234,7 @@ public class JavaVariableFlow {
 		}
 	}
 
-	public static class MethodVisitor extends org.apache.bcel.generic.EmptyVisitor {
+	private static class MethodVisitor extends org.apache.bcel.generic.EmptyVisitor {
 
 		JavaClass visitedClass;
 		private MethodGen mg;
