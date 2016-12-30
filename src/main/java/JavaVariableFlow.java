@@ -66,7 +66,7 @@ public class JavaVariableFlow {
 			// resource =
 			// "/sarnobat.garagebandbroken/Desktop/github-repositories/fuse-java-helloworld-not-groovy/maven/fuse4j-core/target/classes/";
 			resource = "/sarnobat.garagebandbroken/trash/jsch-nio/target/classes";
-			// resource = "/Users/ssarnobat/github/nanohttpd/target";
+//			 resource = "/Users/ssarnobat/github/nanohttpd/target";
 			// resource = "/Users/ssarnobat/github/java_callgraph_csv/target";
 			// TODO: use the current working directory as the class folder, not
 			// an arbitrary jar
