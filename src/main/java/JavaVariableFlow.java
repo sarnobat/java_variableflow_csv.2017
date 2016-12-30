@@ -63,7 +63,8 @@ public class JavaVariableFlow {
 			// "/Users/ssarnobat/work/src/saas/services/plancycle/target";
 			// resource =
 			// "/sarnobat.garagebandbroken/eclipse.git/bin/main/java/";
-			//resource = "/sarnobat.garagebandbroken/Desktop/github-repositories/fuse-java-helloworld-not-groovy/maven/fuse4j-core/target/classes/";
+			// resource =
+			// "/sarnobat.garagebandbroken/Desktop/github-repositories/fuse-java-helloworld-not-groovy/maven/fuse4j-core/target/classes/";
 			resource = "/sarnobat.garagebandbroken/trash/jsch-nio/target/classes";
 			// resource = "/Users/ssarnobat/github/nanohttpd/target";
 			// resource = "/Users/ssarnobat/github/java_callgraph_csv/target";
@@ -85,42 +86,40 @@ public class JavaVariableFlow {
 
 		private static class ClassVisitor extends EmptyVisitor {
 
-		    private JavaClass clazz;
-		    private ConstantPoolGen constants;
-		    private String classReferenceFormat;
-		    
-		    public ClassVisitor(JavaClass jc) {
-		        clazz = jc;
-		        constants = new ConstantPoolGen(clazz.getConstantPool());
-		        classReferenceFormat = "C:" + clazz.getClassName() + " %s";
-		    }
+			private JavaClass clazz;
+			private ConstantPoolGen constants;
+			private String classReferenceFormat;
 
-		    public void visitJavaClass(JavaClass jc) {
-		        jc.getConstantPool().accept(this);
-		        Method[] methods = jc.getMethods();
-		        for (int i = 0; i < methods.length; i++)
-		            methods[i].accept(this);
-		    }
+			public ClassVisitor(JavaClass jc) {
+				clazz = jc;
+				constants = new ConstantPoolGen(clazz.getConstantPool());
+				classReferenceFormat = "C:" + clazz.getClassName() + " %s";
+			}
 
-		    public void visitConstantPool(ConstantPool constantPool) {
-		        for (int i = 0; i < constantPool.getLength(); i++) {
-		            Constant constant = constantPool.getConstant(i);
-		            if (constant == null)
-		                continue;
-		            if (constant.getTag() == 7) {
-		                String referencedClass = 
-		                    constantPool.constantToString(constant);
-		                System.out.println(String.format(classReferenceFormat,
-		                        referencedClass));
-		            }
-		        }
-		    }
+			public void visitJavaClass(JavaClass jc) {
+				jc.getConstantPool().accept(this);
+				Method[] methods = jc.getMethods();
+				for (int i = 0; i < methods.length; i++)
+					methods[i].accept(this);
+			}
 
-		    public void visitMethod(Method method) {
-		        MethodGen mg = new MethodGen(method, clazz.getClassName(), constants);
-		        MethodVisitor visitor = new MethodVisitor(mg, clazz);
-		        visitor.start(); 
-		    }
+			public void visitConstantPool(ConstantPool constantPool) {
+				for (int i = 0; i < constantPool.getLength(); i++) {
+					Constant constant = constantPool.getConstant(i);
+					if (constant == null)
+						continue;
+					if (constant.getTag() == 7) {
+						String referencedClass = constantPool.constantToString(constant);
+						System.out.println(String.format(classReferenceFormat, referencedClass));
+					}
+				}
+			}
+
+			public void visitMethod(Method method) {
+				MethodGen mg = new MethodGen(method, clazz.getClassName(), constants);
+				MethodVisitor visitor = new MethodVisitor(mg, clazz);
+				visitor.start();
+			}
 
 		}
 
@@ -546,8 +545,7 @@ public class JavaVariableFlow {
 			addContainmentRelationshipStringOnly(parentClassFullName, javaClass.getClassName());
 		}
 
-		void addContainmentRelationshipStringOnly(String parentClassName,
-				String childClassName) {
+		void addContainmentRelationshipStringOnly(String parentClassName, String childClassName) {
 			if (parentClassName.equals("java.lang.Object")) {
 				// throw new IllegalAccessError();
 			}
@@ -620,8 +618,7 @@ public class JavaVariableFlow {
 			return ImmutableSet.copyOf(superClassesAndInterfaces);
 		}
 
-		boolean deferContainmentVisit(JavaClass parentClassToVisit,
-				String childClassQualifiedName) {
+		boolean deferContainmentVisit(JavaClass parentClassToVisit, String childClassQualifiedName) {
 			return this.deferredChildContainments.add(new DeferredChildContainment(
 					parentClassToVisit, childClassQualifiedName));
 		}
@@ -1272,22 +1269,26 @@ public class JavaVariableFlow {
 
 		@Override
 		public void visitINVOKEVIRTUAL(INVOKEVIRTUAL i) {
-			System.out.println(String.format(format, "M", i.getReferenceType(cp), i.getMethodName(cp)));
+			System.out.println("JavaVariableFlow.MethodVisitor.visitINVOKEVIRTUAL() - "
+					+ String.format(format, "M", i.getReferenceType(cp), i.getMethodName(cp)));
 		}
 
 		@Override
 		public void visitINVOKEINTERFACE(INVOKEINTERFACE i) {
-			System.out.println(String.format(format, "I", i.getReferenceType(cp), i.getMethodName(cp)));
+			System.out.println("JavaVariableFlow.MethodVisitor.visitINVOKEINTERFACE() - "
+					+ String.format(format, "I", i.getReferenceType(cp), i.getMethodName(cp)));
 		}
 
 		@Override
 		public void visitINVOKESPECIAL(INVOKESPECIAL i) {
-			System.out.println(String.format(format, "O", i.getReferenceType(cp), i.getMethodName(cp)));
+			System.out.println("JavaVariableFlow.MethodVisitor.visitINVOKESPECIAL() - "
+					+ String.format(format, "O", i.getReferenceType(cp), i.getMethodName(cp)));
 		}
 
 		@Override
 		public void visitINVOKESTATIC(INVOKESTATIC i) {
-			System.out.println(String.format(format, "S", i.getReferenceType(cp), i.getMethodName(cp)));
+			System.out.println("JavaVariableFlow.MethodVisitor.visitINVOKESTATIC() - "
+					+ String.format(format, "S", i.getReferenceType(cp), i.getMethodName(cp)));
 		}
 	}
 
