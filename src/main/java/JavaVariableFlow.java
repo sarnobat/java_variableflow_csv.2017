@@ -311,6 +311,7 @@ public class JavaVariableFlow {
 			}
 
 			private static class MyMethodVisitor extends MethodVisitor {
+
 				private final JavaClass visitedClass;
 				private final ConstantPoolGen constantsPool;
 				private final Relationships relationships;
