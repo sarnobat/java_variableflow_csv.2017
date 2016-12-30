@@ -1237,4 +1237,58 @@ public class Main {
 		}
 	}
 
+	public static class MethodVisitor extends org.apache.bcel.generic.EmptyVisitor {
+
+		JavaClass visitedClass;
+		private MethodGen mg;
+		private ConstantPoolGen cp;
+		private String format;
+
+		public MethodVisitor(MethodGen m, JavaClass jc) {
+			visitedClass = jc;
+			mg = m;
+			cp = mg.getConstantPool();
+			format = "M:" + visitedClass.getClassName() + ":" + mg.getName() + " " + "(%s)%s:%s";
+		}
+
+		public void start() {
+			if (mg.isAbstract() || mg.isNative())
+				return;
+			for (InstructionHandle ih = mg.getInstructionList().getStart(); ih != null; ih = ih
+					.getNext()) {
+				Instruction i = ih.getInstruction();
+
+				if (!visitInstruction(i))
+					i.accept(this);
+			}
+		}
+
+		private boolean visitInstruction(Instruction i) {
+			short opcode = i.getOpcode();
+
+			return ((InstructionConstants.INSTRUCTIONS[opcode] != null)
+					&& !(i instanceof ConstantPushInstruction) && !(i instanceof ReturnInstruction));
+		}
+
+		@Override
+		public void visitINVOKEVIRTUAL(INVOKEVIRTUAL i) {
+			System.out.println(String.format(format, "M", i.getReferenceType(cp), i.getMethodName(cp)));
+		}
+
+		@Override
+		public void visitINVOKEINTERFACE(INVOKEINTERFACE i) {
+			System.out.println(String.format(format, "I", i.getReferenceType(cp), i.getMethodName(cp)));
+		}
+
+		@Override
+		public void visitINVOKESPECIAL(INVOKESPECIAL i) {
+			System.out.println(String.format(format, "O", i.getReferenceType(cp), i.getMethodName(cp)));
+		}
+
+		@Override
+		public void visitINVOKESTATIC(INVOKESTATIC i) {
+			System.out.println(String.format(format, "S", i.getReferenceType(cp), i.getMethodName(cp)));
+		}
+	}
+
 }
