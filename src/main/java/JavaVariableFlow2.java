@@ -2,21 +2,25 @@ import java.util.List;
 
 import spoon.Launcher;
 import spoon.reflect.code.CtAssignment;
-import spoon.reflect.code.CtIf;
+//import spoon.reflect.code.CtIf;
 import spoon.reflect.code.CtVariableRead;
-import spoon.reflect.code.CtVariableWrite;
-import spoon.reflect.declaration.CtMethod;
+//import spoon.reflect.code.CtVariableWrite;
+//import spoon.reflect.declaration.CtMethod;
 import spoon.reflect.visitor.CtScanner;
 
+/**
+ * @author sarnobat
+ * 2016-12
+ */
 public class JavaVariableFlow2 {
 
 	static class MyVisitor extends CtScanner {
-		private int expected;
-		private int actual;
+		// private int expected;
+		// private int actual;
 		public boolean equals = false;
 
 		public MyVisitor(int expected) {
-			this.expected = expected;
+			// this.expected = expected;
 		}
 
 		// @Override
