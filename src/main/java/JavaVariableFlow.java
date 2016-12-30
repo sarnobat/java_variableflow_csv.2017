@@ -1236,10 +1236,10 @@ public class JavaVariableFlow {
 
 	private static class MethodVisitor extends org.apache.bcel.generic.EmptyVisitor {
 
-		JavaClass visitedClass;
-		private MethodGen mg;
-		private ConstantPoolGen cp;
-		private String format;
+		private final JavaClass visitedClass;
+		private final MethodGen mg;
+		private final ConstantPoolGen cp;
+		private final String format;
 
 		public MethodVisitor(MethodGen m, JavaClass jc) {
 			visitedClass = jc;
