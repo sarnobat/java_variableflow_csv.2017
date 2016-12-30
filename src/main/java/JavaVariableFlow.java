@@ -23,6 +23,7 @@ import org.apache.bcel.classfile.ConstantPool;
 import org.apache.bcel.classfile.EmptyVisitor;
 import org.apache.bcel.classfile.Field;
 import org.apache.bcel.classfile.JavaClass;
+import org.apache.bcel.classfile.LocalVariable;
 import org.apache.bcel.classfile.Method;
 import org.apache.bcel.generic.ConstantPoolGen;
 import org.apache.bcel.generic.ConstantPushInstruction;
@@ -65,7 +66,8 @@ public class JavaVariableFlow {
 			// "/sarnobat.garagebandbroken/eclipse.git/bin/main/java/";
 			// resource =
 			// "/sarnobat.garagebandbroken/Desktop/github-repositories/fuse-java-helloworld-not-groovy/maven/fuse4j-core/target/classes/";
-			resource = "/sarnobat.garagebandbroken/trash/jsch-nio/target/classes";
+			//resource = "/sarnobat.garagebandbroken/trash/jsch-nio/target/classes";
+			resource = "/sarnobat.garagebandbroken/Desktop/github-repositories/java_variableflow_csv";
 			// resource = "/Users/ssarnobat/github/nanohttpd/target";
 			// resource = "/Users/ssarnobat/github/java_callgraph_csv/target";
 			// TODO: use the current working directory as the class folder, not
@@ -321,6 +323,19 @@ public class JavaVariableFlow {
 						Relationships relationships) {
 					super(methodGen, javaClass);
 					this.visitedClass = javaClass;
+					 for (Method m : javaClass.getMethods()) {
+				          System.out.println("Method: " + m.getName());
+				          int size = m.getArgumentTypes().length;
+				          if (!m.isStatic()) {
+				            size++;
+				          }
+
+				          for (int i = 0; i < size; i++) {
+				              LocalVariable variable = m.getLocalVariableTable().getLocalVariable(i);
+				              // This will only print the variable name if the class was compiled with java -g flag (or -Dcompiler.debug=true)
+				              System.err.println("MyMethodVisitor() - " + m.getName() + "::" + variable.getName());
+				          }
+				      }
 					this.constantsPool = methodGen.getConstantPool();
 					this.parentMethodQualifiedName = MyInstruction.getQualifiedMethodName(
 							methodGen, visitedClass);
@@ -358,6 +373,8 @@ public class JavaVariableFlow {
 				/** instance method */
 				@Override
 				public void visitINVOKEVIRTUAL(INVOKEVIRTUAL iInstruction) {
+					System.out
+							.println("MyMethodVisitor.visitINVOKEVIRTUAL() - iInstruction = " + iInstruction.getSignature(constantsPool));
 					addMethodCallRelationship(iInstruction.getReferenceType(constantsPool),
 							iInstruction.getMethodName(constantsPool), iInstruction,
 							iInstruction.getArgumentTypes(constantsPool));
