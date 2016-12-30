@@ -53,7 +53,7 @@ import com.google.common.collect.Multimap;
  * 
  * @author ssarnobat@google.com (Sridhar Sarnobat)
  */
-public class Main {
+public class JavaVariableFlow {
 
 	public static void main(String[] args) {
 		String resource;
