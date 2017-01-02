@@ -41,10 +41,11 @@ public class JavaVariableFlow2 {
 //			System.err.println("CtScanner.visitCtInvocation()\tinvocation arguments\t" + invocation.getArguments());
 //			System.err.println("CtScanner.visitCtInvocation()\tinvocation arguments\t" + invocation.getArguments().size());
 			int i = 0;
-			for (CtExpression<?> o : invocation.getArguments()) {
+			for (CtExpression<?> argument : invocation.getArguments()) {
 //				System.err.println("CtScanner.visitCtInvocation()\tinvocation arguments\t"
 //						+ o.getClass() + "\t" + o.toString());
-				System.out.println("\"" + invocation.getExecutable() + "::" + o.getShortRepresentation() + "\",\"" + invocation.getExecutable()
+				System.err.print("[correct] INVOCATION\t");
+				System.out.println("\"" + invocation.getExecutable() + "::" + argument.getShortRepresentation() + "\",\"" + invocation.getExecutable()
 						+ "::" + i + "\"");	
 				++i;
 			}
@@ -57,12 +58,13 @@ public class JavaVariableFlow2 {
 		public <T> void visitCtMethod(CtMethod<T> m) {
 			super.visitCtMethod(m);
 			this.method = m;
-			System.err.println("VisitorTest.MyVisitor.enclosing_method(): " + m.getSignature());
-			System.err.println("VisitorTest.MyVisitor.enclosing_method(): " + m.getShortRepresentation());
+//			System.err.println("VisitorTest.MyVisitor.enclosing_method(): " + m.getSignature());
+//			System.err.println("VisitorTest.MyVisitor.enclosing_method(): " + m.getShortRepresentation());
 			List<CtParameter<?>> parameters = m.getParameters();
 			int i = 1;
 			for(CtParameter p : parameters) {
-				System.err.println("VisitorTest.MyVisitor.enclosing_method(): " + p.getSimpleName());
+//				System.err.println("VisitorTest.MyVisitor.enclosing_method(): " + p.getSimpleName());
+				System.err.print("[fix pkg] METHOD\t");
 				System.out.println("\"" + m.getSignature() + "::" + i + "\",\"" + m.getSignature()
 						+ "::" + p.getSimpleName() + "\"");
 				++i;
@@ -95,17 +97,18 @@ public class JavaVariableFlow2 {
 			List<CtVariableRead> elements = assignement.getAssignment().getElements(
 					new spoon.reflect.visitor.filter.TypeFilter<CtVariableRead>(
 							CtVariableRead.class));
-			System.err.println("CtScanner.visitCtAssignment()\tassigned\t"
-					+ assignement.getAssigned().toString());
+//			System.err.println("CtScanner.visitCtAssignment()\tassigned\t"
+//					+ assignement.getAssigned().toString());
 			// System.err.println("CtScanner.visitCtAssignment()\tassignment\t"
 			// + assignement.getAssignment().toString());
-			System.err.println("CtScanner.visitCtAssignment()\tassignment elements\t" + elements);
-			System.err.println("JavaVariableFlow2.MyVisitor.visitCtAssignment() " + method);
+//			System.err.println("CtScanner.visitCtAssignment()\tassignment elements\t" + elements);
+//			System.err.println("JavaVariableFlow2.MyVisitor.visitCtAssignment() " + method);
 //			System.err.println("JavaVariableFlow2.MyVisitor.visitCtAssignment() " + this.enclosingMethod);
 //			String methodSig = assignement.getParent(CtMethod.class).getSignature();
 			String methodSig = assignement.getParent(CtMethod.class).getShortRepresentation();
-			System.err.println("JavaVariableFlow2.MyVisitor.visitCtAssignment() " + methodSig);
+//			System.err.println("JavaVariableFlow2.MyVisitor.visitCtAssignment() " + methodSig);
 			for (CtVariableRead rhsVariableRead : elements) {
+				System.err.print("[fix pkg] ASSIGNMENT\t");
 				System.out.println("\"" + methodSig + "::"+ rhsVariableRead + "\",\"" +  methodSig + "::"+ assignement.getAssigned()
 						+ "\"");
 			}
