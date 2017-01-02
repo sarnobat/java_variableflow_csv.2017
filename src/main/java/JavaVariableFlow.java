@@ -89,12 +89,8 @@ public class JavaVariableFlow {
 		}
 
 		public <T, A extends T> void visitCtAssignment(final CtAssignment<T, A> assignment) {
+			super.visitCtAssignment(assignment);
 			// TODO: call supermethod instead
-			enter(assignment);
-			scan(assignment.getAnnotations());
-			scan(assignment.getType());
-			scan(assignment.getTypeCasts());
-			scan(assignment.getAssigned());
 			List<CtVariableRead<?>> elements = assignment.getAssignment().getElements(
 					new spoon.reflect.visitor.filter.TypeFilter<CtVariableRead<?>>(
 							CtVariableRead.class));
@@ -110,9 +106,6 @@ public class JavaVariableFlow {
 				System.out.println("\"" + methodSig + "::"+ rhsVariableRead + "\",\"" +  methodSig + "::"+ assignment.getAssigned()
 						+ "\"");
 			}
-			scan(assignment.getAssignment());
-			scan(assignment.getComments());
-			exit(assignment);
 		}
 	}
 
