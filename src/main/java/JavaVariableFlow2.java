@@ -34,7 +34,6 @@ public class JavaVariableFlow2 {
 			
 			int i = 1;
 			for (CtExpression<?> argument : invocation.getArguments()) {
-				//System.err.print("[correct] INVOCATION\t");
 				
 				if (argument instanceof CtLiteral<?>) {
 					continue;
@@ -55,24 +54,9 @@ public class JavaVariableFlow2 {
 						new spoon.reflect.visitor.filter.TypeFilter<CtVariableRead<?>>(
 								CtVariableRead.class));
 				if (elements.size() > 1) {
-//					List<CtExpression<?>> elements2 = argument.getElements(
-//							new spoon.reflect.visitor.filter.TypeFilter<CtExpression<?>>(
-//									CtExpression.class));
-//					for (CtExpression<?> i2 : elements2) {
-//						System.err.println("JavaVariableFlow2.MyVisitor.visitCtInvocation() i2 = " + i2 + " -- " + i2.getClass());
-//					}
-//					System.err.println("JavaVariableFlow2.MyVisitor.visitCtInvocation() invocation = " + invocation);
 					throw new RuntimeException("Unhandled 1: " +argument.getClass()+ "\t"+ elements);
 				}
 				if (elements.size() < 1) {
-					
-//					List<CtExpression<?>> elements2 = argument.getElements(
-//							new spoon.reflect.visitor.filter.TypeFilter<CtExpression<?>>(
-//									CtExpression.class));
-//					for (CtExpression<?> i2 : elements2) {
-//						System.err.println("JavaVariableFlow2.MyVisitor.visitCtInvocation() i2 = " + i2 + " -- " + i2.getClass());
-//					}
-//					
 					throw new RuntimeException("Unhandled 2: " + invocation);
 				}
 				for (CtVariableRead<?> v : elements) {
@@ -109,20 +93,14 @@ public class JavaVariableFlow2 {
 			int i = 1;
 			String signature = fixSignature(method);
 			for(CtParameter<?> param : parameters) {
-				//System.err.print("[fix pkg] METHOD\t");
 				System.out.println("\"" + signature + "::" + i + "\",\"" + signature
 						+ "::" + param.getSimpleName() + "\"");
 				++i;
 			}
 		}
-		
-		public void visitCtIf(final CtIf ifElement) {
-			super.visitCtIf(ifElement);
-			//System.err.println("JavaVariableFlow2.MyVisitor.visitCtIf() - " + ifElement);
-		}
 
 		public <T, A extends T> void visitCtAssignment(final CtAssignment<T, A> assignment) {
-			//System.err.println("JavaVariableFlow2.MyVisitor.visitCtAssignment() assignment: " + assignment);
+			// TODO: call supermethod instead
 			enter(assignment);
 			scan(assignment.getAnnotations());
 			scan(assignment.getType());
@@ -140,7 +118,6 @@ public class JavaVariableFlow2 {
 			}
 			String methodSig = elements2.get(0).getReference().getShortRepresentation();
 			for (CtVariableRead<?> rhsVariableRead : elements) {
-				//System.err.print("[correct] ASSIGNMENT\t");
 				System.out.println("\"" + methodSig + "::"+ rhsVariableRead + "\",\"" +  methodSig + "::"+ assignment.getAssigned()
 						+ "\"");
 			}
