@@ -36,13 +36,19 @@ public class JavaVariableFlow2 {
 			exit(invocation);
 		}
 
-		
+		// Note: the regex replacement will have issues in groovy. You'll need to do it programmatically.
+		@Deprecated //Until I find out how to do this properly
+		private static String fixSignature(CtMethod<?> method) {
+			String classNameQualified = method.getParent().getShortRepresentation().replaceAll("^class\\s+", "");
+			return method.getSignature().replaceAll("^(int)\\s+", classNameQualified + "#");
+		}
+
 		@Override
-		public <T> void visitCtMethod(CtMethod<T> m) {
-			super.visitCtMethod(m);
-			List<CtParameter<?>> parameters = m.getParameters();
+		public <T> void visitCtMethod(CtMethod<T> method) {
+			super.visitCtMethod(method);
+			List<CtParameter<?>> parameters = method.getParameters();
 			int i = 1;
-			String signature = m.getSignature();
+			String signature = fixSignature(method);
 			for(CtParameter<?> param : parameters) {
 				System.err.print("[fix pkg] METHOD\t");
 				System.out.println("\"" + signature + "::" + i + "\",\"" + signature
