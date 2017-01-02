@@ -6,6 +6,7 @@ import spoon.reflect.code.CtBinaryOperator;
 import spoon.reflect.code.CtExpression;
 import spoon.reflect.code.CtInvocation;
 import spoon.reflect.code.CtLiteral;
+import spoon.reflect.code.CtThisAccess;
 import spoon.reflect.code.CtVariableRead;
 import spoon.reflect.declaration.CtElement;
 import spoon.reflect.declaration.CtExecutable;
@@ -38,6 +39,10 @@ public class JavaVariableFlow {
 					this.visitCtBinaryOperator((CtBinaryOperator<?>) argument);
 					continue;
 				}
+				if (argument instanceof CtThisAccess<?>) {
+					// TODO: What do we do here?
+					continue;
+				}
 				String variablePassedToInvocation = invocation.getExecutable() + "::" + argument.getShortRepresentation().replaceAll("int\\s+","");
 				System.out.println("\"" + variablePassedToInvocation + "\",\"" + invocation.getExecutable() + "::" + i + "\"");
 
@@ -48,7 +53,7 @@ public class JavaVariableFlow {
 					throw new RuntimeException("Unhandled 1: " +argument.getClass()+ "\t"+ elements);
 				}
 				if (elements.size() < 1) {
-					throw new RuntimeException("Unhandled 2: " + invocation);
+					throw new RuntimeException("Unhandled 2: " +argument.getClass()+ "\t"+  invocation);
 				}
 				for (CtVariableRead<?> v : elements) {
 
@@ -112,7 +117,8 @@ public class JavaVariableFlow {
 	public static void main(String[] args) {
 
 		Launcher launcher = new Launcher();
-		launcher.addInputResource("./Foo.java");
+		//launcher.addInputResource("./Foo.java");
+		launcher.addInputResource("/sarnobat.garagebandbroken/trash/spoon/src/main/java/spoon/reflect/visitor/CtScanner.java");
 		launcher.buildModel();
 
 		new MyVisitor().scan(launcher.getFactory().Package().getRootPackage());
