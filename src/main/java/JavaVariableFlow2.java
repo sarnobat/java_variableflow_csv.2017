@@ -32,7 +32,7 @@ public class JavaVariableFlow2 {
 			
 			int i = 1;
 			for (CtExpression<?> argument : invocation.getArguments()) {
-				System.err.print("[correct] INVOCATION\t");
+				//System.err.print("[correct] INVOCATION\t");
 				String variablePassedToInvocation = invocation.getExecutable() + "::" + argument.getShortRepresentation().replaceAll("int\\s+","");
 				System.out.println("\"" + variablePassedToInvocation + "\",\"" + invocation.getExecutable() + "::" + i + "\"");
 				
@@ -77,7 +77,7 @@ public class JavaVariableFlow2 {
 			int i = 1;
 			String signature = fixSignature(method);
 			for(CtParameter<?> param : parameters) {
-				System.err.print("[fix pkg] METHOD\t");
+				//System.err.print("[fix pkg] METHOD\t");
 				System.out.println("\"" + signature + "::" + i + "\",\"" + signature
 						+ "::" + param.getSimpleName() + "\"");
 				++i;
@@ -102,7 +102,7 @@ public class JavaVariableFlow2 {
 			}
 			String methodSig = elements2.get(0).getReference().getShortRepresentation();
 			for (CtVariableRead<?> rhsVariableRead : elements) {
-				System.err.print("[correct] ASSIGNMENT\t");
+				//System.err.print("[correct] ASSIGNMENT\t");
 				System.out.println("\"" + methodSig + "::"+ rhsVariableRead + "\",\"" +  methodSig + "::"+ assignement.getAssigned()
 						+ "\"");
 			}
