@@ -78,9 +78,6 @@ public class JavaVariableFlow2 {
 		}
 	}
 
-	/**
-	 * @param args
-	 */
 	public static void main(String[] args) {
 
 		Launcher launcher = new Launcher();
