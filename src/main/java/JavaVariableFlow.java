@@ -115,8 +115,7 @@ public class JavaVariableFlow {
 		launcher.addInputResource("./Foo.java");
 		launcher.buildModel();
 
-		final MyVisitor visitor = new MyVisitor();
-		visitor.scan(launcher.getFactory().Package().getRootPackage());
+		new MyVisitor().scan(launcher.getFactory().Package().getRootPackage());
 	}
 
 }
