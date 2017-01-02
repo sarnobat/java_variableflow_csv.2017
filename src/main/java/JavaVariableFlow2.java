@@ -6,6 +6,7 @@ import spoon.reflect.code.CtExpression;
 import spoon.reflect.code.CtInvocation;
 //import spoon.reflect.code.CtIf;
 import spoon.reflect.code.CtVariableRead;
+import spoon.reflect.declaration.CtExecutable;
 import spoon.reflect.declaration.CtMethod;
 import spoon.reflect.declaration.CtParameter;
 import spoon.reflect.reference.CtExecutableReference;
@@ -97,6 +98,15 @@ public class JavaVariableFlow2 {
 			List<CtVariableRead> elements = assignement.getAssignment().getElements(
 					new spoon.reflect.visitor.filter.TypeFilter<CtVariableRead>(
 							CtVariableRead.class));
+			
+			List<CtExecutable> elements2 = assignement.getParent(CtExecutable.class).getElements(
+					new spoon.reflect.visitor.filter.TypeFilter<CtExecutable>(
+							CtExecutable.class));
+			if (elements2.size() != 1) {
+				throw new RuntimeException("Unhandled");
+			}
+			//System.out.println("JavaVariableFlow2.MyVisitor.visitCtAssignment() elements2 = " + elements2.get(0).getReference());
+			
 //			System.err.println("CtScanner.visitCtAssignment()\tassigned\t"
 //					+ assignement.getAssigned().toString());
 			// System.err.println("CtScanner.visitCtAssignment()\tassignment\t"
@@ -105,10 +115,11 @@ public class JavaVariableFlow2 {
 //			System.err.println("JavaVariableFlow2.MyVisitor.visitCtAssignment() " + method);
 //			System.err.println("JavaVariableFlow2.MyVisitor.visitCtAssignment() " + this.enclosingMethod);
 //			String methodSig = assignement.getParent(CtMethod.class).getSignature();
-			String methodSig = assignement.getParent(CtMethod.class).getShortRepresentation();
+			//String methodSig = assignement.getParent(CtMethod.class).getShortRepresentation();
+			String methodSig = elements2.get(0).getReference().getShortRepresentation();
 //			System.err.println("JavaVariableFlow2.MyVisitor.visitCtAssignment() " + methodSig);
 			for (CtVariableRead rhsVariableRead : elements) {
-				System.err.print("[fix pkg] ASSIGNMENT\t");
+				System.err.print("[correct] ASSIGNMENT\t");
 				System.out.println("\"" + methodSig + "::"+ rhsVariableRead + "\",\"" +  methodSig + "::"+ assignement.getAssigned()
 						+ "\"");
 			}
