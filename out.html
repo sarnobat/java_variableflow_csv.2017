@@ -117,8 +117,10 @@ return  [
   { source : "spoon.test.visitor.Foo#factorial(int)::sridharLocalVariable", target : "java.lang.Math#max(int, int)::sridharLocalVariable" },
   { source : "java.lang.Math#max(int, int)::iSridharParam", target : "java.lang.Math#max(int, int)::2" },
   { source : "spoon.test.visitor.Foo#factorial(int)::iSridharParam", target : "java.lang.Math#max(int, int)::iSridharParam" },
-  { source : "spoon.test.visitor.Foo#factorial(int)::iSridharParamMINUS1", target : "spoon.test.visitor.Foo#factorial(int)::1" },
-  { source : "spoon.test.visitor.Foo#factorial(int)::iSridharParam", target : "spoon.test.visitor.Foo#factorial(int)::iSridharParamMINUS1" },
+  { source : "java.lang.Math#min(int, int)::sridharLocalVariable", target : "java.lang.Math#min(int, int)::1" },
+  { source : "spoon.test.visitor.Foo#factorial(int)::sridharLocalVariable", target : "java.lang.Math#min(int, int)::sridharLocalVariable" },
+  { source : "java.lang.Math#min(int, int)::sridharLocalVariable", target : "java.lang.Math#min(int, int)::1" },
+  { source : "spoon.test.visitor.Foo#factorial(int)::sridharLocalVariable", target : "java.lang.Math#min(int, int)::sridharLocalVariable" },
   { source : "spoon.test.visitor.Foo#factorial(int)::1", target : "spoon.test.visitor.Foo#factorial(int)::iSridharParam" },
 ];
 }

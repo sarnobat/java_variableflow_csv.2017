@@ -35,8 +35,6 @@ public class JavaVariableFlow2 {
 			int i = 1;
 			for (CtExpression<?> argument : invocation.getArguments()) {
 				//System.err.print("[correct] INVOCATION\t");
-				String variablePassedToInvocation = invocation.getExecutable() + "::" + argument.getShortRepresentation().replaceAll("int\\s+","");
-				System.out.println("\"" + variablePassedToInvocation + "\",\"" + invocation.getExecutable() + "::" + i + "\"");
 				
 				if (argument instanceof CtLiteral<?>) {
 					continue;
@@ -50,6 +48,8 @@ public class JavaVariableFlow2 {
 					this.visitCtBinaryOperator((CtBinaryOperator<?>) argument);
 					continue;
 				}
+				String variablePassedToInvocation = invocation.getExecutable() + "::" + argument.getShortRepresentation().replaceAll("int\\s+","");
+				System.out.println("\"" + variablePassedToInvocation + "\",\"" + invocation.getExecutable() + "::" + i + "\"");
 
 				List<CtVariableRead<?>> elements = argument.getElements(
 						new spoon.reflect.visitor.filter.TypeFilter<CtVariableRead<?>>(
