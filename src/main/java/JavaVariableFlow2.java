@@ -2,9 +2,11 @@ import java.util.List;
 
 import spoon.Launcher;
 import spoon.reflect.code.CtAssignment;
+import spoon.reflect.code.CtBlock;
 import spoon.reflect.code.CtExpression;
 import spoon.reflect.code.CtInvocation;
 import spoon.reflect.code.CtVariableRead;
+import spoon.reflect.declaration.CtElement;
 import spoon.reflect.declaration.CtExecutable;
 import spoon.reflect.declaration.CtMethod;
 import spoon.reflect.declaration.CtParameter;
@@ -31,12 +33,37 @@ public class JavaVariableFlow2 {
 			int i = 1;
 			for (CtExpression<?> argument : invocation.getArguments()) {
 				System.err.print("[correct] INVOCATION\t");
-				System.out.println("\"" + invocation.getExecutable() + "::" + argument.getShortRepresentation() + "\",\"" + invocation.getExecutable()
-						+ "::" + i + "\"");	
+				String variablePassedToInvocation = invocation.getExecutable() + "::" + argument.getShortRepresentation();
+				System.out.println("\"" + variablePassedToInvocation + "\",\"" + invocation.getExecutable() + "::" + i + "\"");
+				
+
+				List<CtVariableRead<?>> elements = argument.getElements(
+						new spoon.reflect.visitor.filter.TypeFilter<CtVariableRead<?>>(
+								CtVariableRead.class));
+				System.out.println("  JavaVariableFlow2.MyVisitor.visitCtInvocation() elements = " + elements);
+				if (elements.size() != 1) {
+					throw new RuntimeException("Unhandled: " + elements);
+				}
+				for (CtVariableRead<?> v : elements) {
+					System.err.println("JavaVariableFlow2.MyVisitor.visitCtInvocation() ");
+					
+
+					CtMethod<?> parent =  getContainingMethod(invocation);
+					String s = this.fixSignature(parent);
+					System.out.println("\""+s+"::"+v.getShortRepresentation()+"\",\""+variablePassedToInvocation+"\"");
+				}
 				++i;
 			}
 			scan(invocation.getComments());
 			exit(invocation);
+		}
+		
+		private static CtMethod<?> getContainingMethod(CtElement e) {
+			if (e instanceof CtMethod) {
+				return (CtMethod<?>) e;
+			} else {
+				return getContainingMethod(e.getParent());
+			}
 		}
 
 		// Note: the regex replacement will have issues in groovy. You'll need to do it programmatically.
