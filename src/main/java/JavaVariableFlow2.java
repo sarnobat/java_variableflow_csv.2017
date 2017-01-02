@@ -42,10 +42,11 @@ public class JavaVariableFlow2 {
 			super.visitCtMethod(m);
 			List<CtParameter<?>> parameters = m.getParameters();
 			int i = 1;
-			for(CtParameter<?> p : parameters) {
+			String signature = m.getSignature();
+			for(CtParameter<?> param : parameters) {
 				System.err.print("[fix pkg] METHOD\t");
-				System.out.println("\"" + m.getSignature() + "::" + i + "\",\"" + m.getSignature()
-						+ "::" + p.getSimpleName() + "\"");
+				System.out.println("\"" + signature + "::" + i + "\",\"" + signature
+						+ "::" + param.getSimpleName() + "\"");
 				++i;
 			}
 		}
