@@ -40,7 +40,7 @@ public class JavaVariableFlow2 {
 			scan(invocation.getArguments());
 //			System.err.println("CtScanner.visitCtInvocation()\tinvocation arguments\t" + invocation.getArguments());
 //			System.err.println("CtScanner.visitCtInvocation()\tinvocation arguments\t" + invocation.getArguments().size());
-			int i = 0;
+			int i = 1;
 			for (CtExpression<?> argument : invocation.getArguments()) {
 //				System.err.println("CtScanner.visitCtInvocation()\tinvocation arguments\t"
 //						+ o.getClass() + "\t" + o.toString());
