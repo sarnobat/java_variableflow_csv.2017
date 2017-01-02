@@ -2,9 +2,13 @@ import java.util.List;
 
 import spoon.Launcher;
 import spoon.reflect.code.CtAssignment;
+import spoon.reflect.code.CtBinaryOperator;
 import spoon.reflect.code.CtBlock;
 import spoon.reflect.code.CtExpression;
+import spoon.reflect.code.CtIf;
 import spoon.reflect.code.CtInvocation;
+import spoon.reflect.code.CtLiteral;
+import spoon.reflect.code.CtStatement;
 import spoon.reflect.code.CtVariableRead;
 import spoon.reflect.declaration.CtElement;
 import spoon.reflect.declaration.CtExecutable;
@@ -28,20 +32,48 @@ public class JavaVariableFlow2 {
 			scan(invocation.getExecutable());
 			scan(invocation.getArguments());
 			
-			// TODO link the local variables to the args
-			
 			int i = 1;
 			for (CtExpression<?> argument : invocation.getArguments()) {
 				//System.err.print("[correct] INVOCATION\t");
 				String variablePassedToInvocation = invocation.getExecutable() + "::" + argument.getShortRepresentation().replaceAll("int\\s+","");
 				System.out.println("\"" + variablePassedToInvocation + "\",\"" + invocation.getExecutable() + "::" + i + "\"");
 				
+				if (argument instanceof CtLiteral<?>) {
+					continue;
+				}
+				if (argument instanceof CtInvocation<?>) {
+					// I'm not sure why this doesn't happen automatically.
+					this.visitCtInvocation((CtInvocation<?>)argument);
+					continue;
+				}
+				if (argument instanceof CtBinaryOperator<?>) {
+					this.visitCtBinaryOperator((CtBinaryOperator<?>) argument);
+					continue;
+				}
 
 				List<CtVariableRead<?>> elements = argument.getElements(
 						new spoon.reflect.visitor.filter.TypeFilter<CtVariableRead<?>>(
 								CtVariableRead.class));
-				if (elements.size() != 1) {
-					throw new RuntimeException("Unhandled: " + elements);
+				if (elements.size() > 1) {
+//					List<CtExpression<?>> elements2 = argument.getElements(
+//							new spoon.reflect.visitor.filter.TypeFilter<CtExpression<?>>(
+//									CtExpression.class));
+//					for (CtExpression<?> i2 : elements2) {
+//						System.err.println("JavaVariableFlow2.MyVisitor.visitCtInvocation() i2 = " + i2 + " -- " + i2.getClass());
+//					}
+//					System.err.println("JavaVariableFlow2.MyVisitor.visitCtInvocation() invocation = " + invocation);
+					throw new RuntimeException("Unhandled 1: " +argument.getClass()+ "\t"+ elements);
+				}
+				if (elements.size() < 1) {
+					
+//					List<CtExpression<?>> elements2 = argument.getElements(
+//							new spoon.reflect.visitor.filter.TypeFilter<CtExpression<?>>(
+//									CtExpression.class));
+//					for (CtExpression<?> i2 : elements2) {
+//						System.err.println("JavaVariableFlow2.MyVisitor.visitCtInvocation() i2 = " + i2 + " -- " + i2.getClass());
+//					}
+//					
+					throw new RuntimeException("Unhandled 2: " + invocation);
 				}
 				for (CtVariableRead<?> v : elements) {
 
@@ -83,9 +115,14 @@ public class JavaVariableFlow2 {
 				++i;
 			}
 		}
+		
+		public void visitCtIf(final CtIf ifElement) {
+			super.visitCtIf(ifElement);
+			//System.err.println("JavaVariableFlow2.MyVisitor.visitCtIf() - " + ifElement);
+		}
 
 		public <T, A extends T> void visitCtAssignment(final CtAssignment<T, A> assignment) {
-			System.err.println("JavaVariableFlow2.MyVisitor.visitCtAssignment() assignment: " + assignment);
+			//System.err.println("JavaVariableFlow2.MyVisitor.visitCtAssignment() assignment: " + assignment);
 			enter(assignment);
 			scan(assignment.getAnnotations());
 			scan(assignment.getType());

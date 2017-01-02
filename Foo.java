@@ -6,11 +6,9 @@ public class Foo {
     	int sridharLocalVariable = 1;
     	sridharLocalVariable = Math.max(sridharLocalVariable, iSridharParam);
         if (iSridharParam < 0) {
-            throw new IllegalArgumentException("iSridharParam < 0");
-        } else if (iSridharParam == 0) {
-            return 1;
-        } else {
-            return iSridharParam * factorial(iSridharParam-1);
+        	int ret = iSridharParam * factorial(iSridharParam - Math.min(sridharLocalVariable, 2));
+            return ret;
         }
+        return 1;
     }
 }
