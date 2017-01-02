@@ -18,9 +18,6 @@ public class JavaVariableFlow2 {
 	static class MyVisitor extends CtScanner {
 		public boolean equals = false;
 
-		public MyVisitor(int expected) {
-			// this.expected = expected;
-		}
 		public <T> void visitCtInvocation(final CtInvocation<T> invocation) {
 			enter(invocation);
 			scan(invocation.getAnnotations());
@@ -43,12 +40,9 @@ public class JavaVariableFlow2 {
 		@Override
 		public <T> void visitCtMethod(CtMethod<T> m) {
 			super.visitCtMethod(m);
-//			System.err.println("VisitorTest.MyVisitor.enclosing_method(): " + m.getSignature());
-//			System.err.println("VisitorTest.MyVisitor.enclosing_method(): " + m.getShortRepresentation());
 			List<CtParameter<?>> parameters = m.getParameters();
 			int i = 1;
 			for(CtParameter<?> p : parameters) {
-//				System.err.println("VisitorTest.MyVisitor.enclosing_method(): " + p.getSimpleName());
 				System.err.print("[fix pkg] METHOD\t");
 				System.out.println("\"" + m.getSignature() + "::" + i + "\",\"" + m.getSignature()
 						+ "::" + p.getSimpleName() + "\"");
@@ -57,8 +51,6 @@ public class JavaVariableFlow2 {
 		}
 
 		public <T, A extends T> void visitCtAssignment(final CtAssignment<T, A> assignement) {
-			// System.out.println("CtScanner.visitCtAssignment()" +
-			// assignement);
 			enter(assignement);
 			scan(assignement.getAnnotations());
 			scan(assignement.getType());
@@ -68,14 +60,14 @@ public class JavaVariableFlow2 {
 					new spoon.reflect.visitor.filter.TypeFilter<CtVariableRead<?>>(
 							CtVariableRead.class));
 			
-			List<CtExecutable> elements2 = assignement.getParent(CtExecutable.class).getElements(
-					new spoon.reflect.visitor.filter.TypeFilter<CtExecutable>(
+			List<CtExecutable<?>> elements2 = assignement.getParent(CtExecutable.class).getElements(
+					new spoon.reflect.visitor.filter.TypeFilter<CtExecutable<?>>(
 							CtExecutable.class));
 			if (elements2.size() != 1) {
 				throw new RuntimeException("Unhandled");
 			}
 			String methodSig = elements2.get(0).getReference().getShortRepresentation();
-			for (CtVariableRead rhsVariableRead : elements) {
+			for (CtVariableRead<?> rhsVariableRead : elements) {
 				System.err.print("[correct] ASSIGNMENT\t");
 				System.out.println("\"" + methodSig + "::"+ rhsVariableRead + "\",\"" +  methodSig + "::"+ assignement.getAssigned()
 						+ "\"");
@@ -95,7 +87,7 @@ public class JavaVariableFlow2 {
 		launcher.addInputResource("./Foo.java");
 		launcher.buildModel();
 
-		final MyVisitor visitor = new MyVisitor(2);
+		final MyVisitor visitor = new MyVisitor();
 		visitor.scan(launcher.getFactory().Package().getRootPackage());
 	}
 
