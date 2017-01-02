@@ -43,7 +43,7 @@ public class JavaVariableFlow {
 					// TODO: What do we do here?
 					continue;
 				}
-				String variablePassedToInvocation = invocation.getExecutable() + "::" + argument.getShortRepresentation().replaceAll("int\\s+","");
+				String variablePassedToInvocation = invocation.getExecutable() + "::" + argument.getShortRepresentation().replaceAll("(<.*>\\s+)?(int|void|[a-zA-Z\\.]+)\\s+","");
 				System.out.println("\"" + variablePassedToInvocation + "\",\"" + invocation.getExecutable() + "::" + i + "\"");
 
 				List<CtVariableRead<?>> elements = argument.getElements(
@@ -59,7 +59,7 @@ public class JavaVariableFlow {
 
 					CtMethod<?> containingMethod =  getContainingMethod(invocation);
 					String containingMethodSignature = this.fixSignature(containingMethod);
-					System.out.println("\""+containingMethodSignature+"::"+v.getShortRepresentation().replaceAll("int\\s+","")+"\",\""+variablePassedToInvocation+"\"");
+					System.out.println("\""+containingMethodSignature+"::"+v.getShortRepresentation().replaceAll("(<.*>\\s+)?(void|int|[a-zA-Z\\.]+)\\s+","")+"\",\""+variablePassedToInvocation+"\"");
 				}
 				++i;
 			}
@@ -77,7 +77,11 @@ public class JavaVariableFlow {
 		@Deprecated //Until I find out how to do this properly
 		private static String fixSignature(CtMethod<?> method) {
 			String classNameQualified = method.getParent().getShortRepresentation().replaceAll("^class\\s+", "");
-			return method.getSignature().replaceAll("^(int)\\s+", classNameQualified + "#");
+			String replaceAll = method.getSignature().replaceAll("^(<.*>\\s+)?(int|void|[a-zA-Z\\.]+)\\s+", classNameQualified + "#");
+			if (replaceAll.contains("<")) {
+				throw new RuntimeException("Unhandled: fixing signature with generic: " + replaceAll);
+			}
+			return replaceAll;
 		}
 
 		@Override
