@@ -25,6 +25,9 @@ public class JavaVariableFlow2 {
 			scan(invocation.getTarget());
 			scan(invocation.getExecutable());
 			scan(invocation.getArguments());
+			
+			// TODO link the local variables to the args
+			
 			int i = 1;
 			for (CtExpression<?> argument : invocation.getArguments()) {
 				System.err.print("[correct] INVOCATION\t");

@@ -111,12 +111,12 @@ var force = d3.layout.force()
 
 function getData() {
 return  [
-  { source : "int factorial(int)::sridharLocalVariable", target : "int factorial(int)::sridharLocalVariable" },
-  { source : "int factorial(int)::iSridharParam", target : "int factorial(int)::sridharLocalVariable" },
-  { source : "java.lang.Math#max(int, int)::int sridharLocalVariable", target : "java.lang.Math#max(int, int)::0" },
-  { source : "java.lang.Math#max(int, int)::int iSridharParam", target : "java.lang.Math#max(int, int)::1" },
-  { source : "spoon.test.visitor.Foo#factorial(int)::int iSridharParamMINUS1", target : "spoon.test.visitor.Foo#factorial(int)::0" },
-  { source : "int factorial(int)::1", target : "int factorial(int)::iSridharParam" },
+  { source : "spoon.test.visitor.Foo#factorial(int)::sridharLocalVariable", target : "spoon.test.visitor.Foo#factorial(int)::sridharLocalVariable" },
+  { source : "spoon.test.visitor.Foo#factorial(int)::iSridharParam", target : "spoon.test.visitor.Foo#factorial(int)::sridharLocalVariable" },
+  { source : "java.lang.Math#max(int, int)::int sridharLocalVariable", target : "java.lang.Math#max(int, int)::1" },
+  { source : "java.lang.Math#max(int, int)::int iSridharParam", target : "java.lang.Math#max(int, int)::2" },
+  { source : "spoon.test.visitor.Foo#factorial(int)::int iSridharParamMINUS1", target : "spoon.test.visitor.Foo#factorial(int)::1" },
+  { source : "spoon.test.visitor.Foo#factorial(int)::1", target : "spoon.test.visitor.Foo#factorial(int)::iSridharParam" },
 ];
 }
 </script>
