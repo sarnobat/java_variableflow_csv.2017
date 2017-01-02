@@ -33,24 +33,21 @@ public class JavaVariableFlow2 {
 			int i = 1;
 			for (CtExpression<?> argument : invocation.getArguments()) {
 				System.err.print("[correct] INVOCATION\t");
-				String variablePassedToInvocation = invocation.getExecutable() + "::" + argument.getShortRepresentation();
+				String variablePassedToInvocation = invocation.getExecutable() + "::" + argument.getShortRepresentation().replaceAll("int\\s+","");
 				System.out.println("\"" + variablePassedToInvocation + "\",\"" + invocation.getExecutable() + "::" + i + "\"");
 				
 
 				List<CtVariableRead<?>> elements = argument.getElements(
 						new spoon.reflect.visitor.filter.TypeFilter<CtVariableRead<?>>(
 								CtVariableRead.class));
-				System.out.println("  JavaVariableFlow2.MyVisitor.visitCtInvocation() elements = " + elements);
 				if (elements.size() != 1) {
 					throw new RuntimeException("Unhandled: " + elements);
 				}
 				for (CtVariableRead<?> v : elements) {
-					System.err.println("JavaVariableFlow2.MyVisitor.visitCtInvocation() ");
-					
 
 					CtMethod<?> parent =  getContainingMethod(invocation);
 					String s = this.fixSignature(parent);
-					System.out.println("\""+s+"::"+v.getShortRepresentation()+"\",\""+variablePassedToInvocation+"\"");
+					System.out.println("\""+s+"::"+v.getShortRepresentation().replaceAll("int\\s+","")+"\",\""+variablePassedToInvocation+"\"");
 				}
 				++i;
 			}
