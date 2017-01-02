@@ -118,7 +118,7 @@ public class JavaVariableFlow {
 
 		Launcher launcher = new Launcher();
 		//launcher.addInputResource("./Foo.java");
-		launcher.addInputResource("/sarnobat.garagebandbroken/trash/spoon/src/main/java/spoon/reflect/visitor/CtScanner.java");
+		launcher.addInputResource("./CtScanner.java");
 		launcher.buildModel();
 
 		new MyVisitor().scan(launcher.getFactory().Package().getRootPackage());
