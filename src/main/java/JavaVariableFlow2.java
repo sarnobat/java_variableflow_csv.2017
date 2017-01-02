@@ -84,17 +84,18 @@ public class JavaVariableFlow2 {
 			}
 		}
 
-		public <T, A extends T> void visitCtAssignment(final CtAssignment<T, A> assignement) {
-			enter(assignement);
-			scan(assignement.getAnnotations());
-			scan(assignement.getType());
-			scan(assignement.getTypeCasts());
-			scan(assignement.getAssigned());
-			List<CtVariableRead<?>> elements = assignement.getAssignment().getElements(
+		public <T, A extends T> void visitCtAssignment(final CtAssignment<T, A> assignment) {
+			System.err.println("JavaVariableFlow2.MyVisitor.visitCtAssignment() assignment: " + assignment);
+			enter(assignment);
+			scan(assignment.getAnnotations());
+			scan(assignment.getType());
+			scan(assignment.getTypeCasts());
+			scan(assignment.getAssigned());
+			List<CtVariableRead<?>> elements = assignment.getAssignment().getElements(
 					new spoon.reflect.visitor.filter.TypeFilter<CtVariableRead<?>>(
 							CtVariableRead.class));
 			
-			List<CtExecutable<?>> elements2 = assignement.getParent(CtExecutable.class).getElements(
+			List<CtExecutable<?>> elements2 = assignment.getParent(CtExecutable.class).getElements(
 					new spoon.reflect.visitor.filter.TypeFilter<CtExecutable<?>>(
 							CtExecutable.class));
 			if (elements2.size() != 1) {
@@ -103,12 +104,12 @@ public class JavaVariableFlow2 {
 			String methodSig = elements2.get(0).getReference().getShortRepresentation();
 			for (CtVariableRead<?> rhsVariableRead : elements) {
 				//System.err.print("[correct] ASSIGNMENT\t");
-				System.out.println("\"" + methodSig + "::"+ rhsVariableRead + "\",\"" +  methodSig + "::"+ assignement.getAssigned()
+				System.out.println("\"" + methodSig + "::"+ rhsVariableRead + "\",\"" +  methodSig + "::"+ assignment.getAssigned()
 						+ "\"");
 			}
-			scan(assignement.getAssignment());
-			scan(assignement.getComments());
-			exit(assignement);
+			scan(assignment.getAssignment());
+			scan(assignment.getComments());
+			exit(assignment);
 		}
 	}
 
