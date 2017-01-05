@@ -122,7 +122,11 @@ public class JavaVariableFlow {
 
 		Launcher launcher = new Launcher();
 		//launcher.addInputResource("./Foo.java");
-		launcher.addInputResource("./CtScanner.java");
+		if (args.length > 0) {
+			launcher.addInputResource(args[0]);
+		} else {
+			launcher.addInputResource("./CtScanner.java");
+		}
 		launcher.buildModel();
 
 		new MyVisitor().scan(launcher.getFactory().Package().getRootPackage());
